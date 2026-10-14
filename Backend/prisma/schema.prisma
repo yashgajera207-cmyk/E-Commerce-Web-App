@@ -8,51 +8,120 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String
-  email        String   @unique
-  mobile       String?  @unique
+  email        String      @unique
+  mobile       String?     @unique
   passwordHash String?
-  role         String   @default("user")
+  role         String      @default("user") // "user" | "admin" | "seller"
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  superCoins   Int         @default(50)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  addresses    Address[]
   orders       Order[]
+  cartItems    CartItem[]
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName    String
+  mobile      String
+  pincode     String
+  locality    String
+  address     String
+  city        String
+  state       String
+  landmark    String?
+  addressType String   @default("HOME") // "HOME" | "WORK"
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }
 
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique
+  slug      String?   @unique
   icon      String?
   createdAt DateTime  @default(now())
   products  Product[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
+  slug        String?   @unique
   description String
   price       Float
+  mrp         Float?
+  discount    Int?
+  rating      Float?    @default(4.2)
+  ratingCount Int?      @default(120)
   image       String?
-  categoryId  Int
-  category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  section     String?   @default("deal") // "deal" | "trending" | "new" | "spotlight"
+  brand       String?
+  isAssured   Boolean   @default(true)
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Offer {
   id        Int      @id @default(autoincrement())
   title     String
   subtitle  String
+  image     String?
+  badge     String?
   createdAt DateTime @default(now())
 }
 
 model Order {
+  id            Int         @id @default(autoincrement())
+  orderNumber   String      @unique @default(cuid())
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalAmount   Float
+  discount      Float       @default(0)
+  deliveryFee   Float       @default(0)
+  paymentMethod String      @default("COD") // "COD" | "CARD" | "UPI" | "NET_BANKING"
+  paymentStatus String      @default("COMPLETED") // "PENDING" | "COMPLETED" | "FAILED"
+  orderStatus   String      @default("CONFIRMED") // "PLACED" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED"
+  deliveryDate  DateTime?
+  address       String?
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id           Int      @id @default(autoincrement())
+  orderId      Int
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  productName  String
+  productImage String?
+  price        Float
+  mrp          Float?
+  quantity     Int      @default(1)
+}
+
+model CartItem {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  total     Float
-  status    String   @default("pending")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  name      String
+  image     String?
+  price     Float
+  mrp       Float?
+  discount  Int?
+  quantity  Int      @default(1)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
 }

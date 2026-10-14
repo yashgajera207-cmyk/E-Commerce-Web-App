@@ -19,7 +19,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
-  const { token, openLoginModal } = useAuth();
+  const { token } = useAuth();
 
   // Load cart and wishlist from localStorage on mount
   useEffect(() => {
@@ -96,11 +96,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const placeOrder = async () => {
     if (!token) {
-      openLoginModal();
+      window.location.href = "/login";
       throw new Error("Login required to place order");
     }
 
-    const total = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    // Compute total from cartItems
+    const totalAmount = cartItems.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+
     const res = await fetch("http://localhost:5000/api/orders", {
       method: "POST",
       headers: {
@@ -108,8 +113,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        // Send items in the nested { product, quantity } shape —
+        // the backend normalises both formats automatically.
         items: cartItems,
-        total,
+        totalAmount,
       }),
     });
 

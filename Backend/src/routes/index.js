@@ -1,36 +1,27 @@
 import express from "express";
-import {
-  registerUser,
-  loginUser,
-  sendOtp,
-  verifyOtp,
-} from "../controllers/authController.js";
-import {
-  getHomeData,
-  getProducts,
-  createProduct,
-  getCategories,
-  createCategory,
-  getOffers,
-  createOffer,
-} from "../controllers/catalogController.js";
-import { authMiddleware } from "../middleware/auth.js";
+import authRoutes from "./authRoutes.js";
+import orderRoutes from "./orderRoutes.js";
+import cartRoutes from "./cartRoutes.js";
+import catalogRoutes from "./catalogRoutes.js";
+import validateRoutes from "./validateRoutes.js";
+import adminRoutes from "./adminRoutes.js";
 
 const router = express.Router();
 
-router.get("/health", (_req, res) => res.json({ status: "ok" }));
-router.post("/auth/register", registerUser);
-router.post("/auth/login", loginUser);
-router.post("/auth/send-otp", sendOtp);
-router.post("/auth/verify-otp", verifyOtp);
+router.get("/health", (_req, res) => {
+  res.json({
+    status: "ok",
+    service: "ShopZone Backend API",
+    db: "PostgreSQL (Prisma)",
+    timestamp: new Date().toISOString(),
+  });
+});
 
-router.get("/home", getHomeData);
-router.get("/products", getProducts);
-router.get("/categories", getCategories);
-router.get("/offers", getOffers);
-
-router.post("/products", authMiddleware, createProduct);
-router.post("/categories", authMiddleware, createCategory);
-router.post("/offers", authMiddleware, createOffer);
+router.use("/auth", authRoutes);
+router.use("/validate", validateRoutes);
+router.use("/orders", orderRoutes);
+router.use("/cart", cartRoutes);
+router.use("/admin", adminRoutes);
+router.use("/", catalogRoutes);
 
 export default router;

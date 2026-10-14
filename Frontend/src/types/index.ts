@@ -24,6 +24,11 @@ export interface Perk {
   sub: string;
 }
 
+export interface ProductSpec {
+  key: string;
+  value: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -35,12 +40,18 @@ export interface Product {
   discount?: number;
   rating?: number;
   ratingCount?: number;
+  category?: string;
+  brand?: string;
+  description?: string;
+  specifications?: ProductSpec[];
+  inStock?: boolean;
+  deliveryDate?: string;
 }
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "blue" | "outline" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 
-export type BadgeTone = "red" | "orange" | "green" | "navy" | "gray";
+export type BadgeTone = "red" | "orange" | "green" | "navy" | "gray" | "blue" | "yellow" | "purple";
 
 export interface PromoBanner {
   id: string;
@@ -53,4 +64,24 @@ export interface PromoBanner {
 export interface CartItem {
   product: Product;
   quantity: number;
+}
+
+export interface Address {
+  id: string;
+  name: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  pincode: string;
+  type: "Home" | "Work" | "Other";
+  isDefault?: boolean;
+}
+
+export interface SearchFilters {
+  priceMin?: number;
+  priceMax?: number;
+  brands?: string[];
+  rating?: number;
+  sortBy?: "relevance" | "price_asc" | "price_desc" | "rating";
 }

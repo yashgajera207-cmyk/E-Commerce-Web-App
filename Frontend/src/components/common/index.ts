@@ -1,0 +1,13 @@
+// Common reusable UI components — barrel export
+export { default as Button } from "./Button";
+export { default as Input } from "./Input";
+export { default as Alert } from "./Alert";
+export { default as Card } from "./Card";
+export { default as Badge } from "./Badge";
+export { default as Spinner } from "./Spinner";
+export { default as Modal } from "./Modal";
+export { default as PriceTag } from "./PriceTag";
+export { default as Rating } from "./Rating";
+export { default as SectionHeader } from "./SectionHeader";
+export { default as Breadcrumb } from "./Breadcrumb";
+export { default as EmptyState } from "./EmptyState";

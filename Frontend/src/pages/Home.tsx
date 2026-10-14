@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import HeroBanner from "../components/home/HeroBanner";
-import PerksStrip from "../components/home/PerksStrip";
 import CategoryGrid from "../components/home/CategoryGrid";
-import PromoBannerGrid from "../components/home/PromoBannerGrid";
+import HeroBanner from "../components/home/HeroBanner";
 import DealsOfTheDay from "../components/home/DealsOfTheDay";
 import ProductRail from "../components/home/ProductRail";
+import PerksStrip from "../components/home/PerksStrip";
+import PromoBannerGrid from "../components/home/PromoBannerGrid";
 import TopBrands from "../components/home/TopBrands";
-
 import AppDownloadBanner from "../components/home/AppDownloadBanner";
 import { trendingProducts as fallbackTrending, newArrivals as fallbackNew, dealsOfTheDay as fallbackDeals } from "../data/products";
 import type { Product } from "../types";
@@ -24,15 +23,9 @@ export default function Home() {
     fetch("http://localhost:5000/api/home")
       .then((res) => res.json())
       .then((data) => {
-        if (data.products) {
-          const fetchedDeals = data.products.filter((p: any) => p.section === "deal");
-          const fetchedTrending = data.products.filter((p: any) => p.section === "trending");
-          const fetchedNew = data.products.filter((p: any) => p.section === "new");
-
-          if (fetchedDeals.length > 0) setDeals(fetchedDeals);
-          if (fetchedTrending.length > 0) setTrending(fetchedTrending);
-          if (fetchedNew.length > 0) setNewProducts(fetchedNew);
-        }
+        if (data.deals && data.deals.length > 0) setDeals(data.deals);
+        if (data.trending && data.trending.length > 0) setTrending(data.trending);
+        if (data.newArrivals && data.newArrivals.length > 0) setNewProducts(data.newArrivals);
       })
       .catch((err) => console.error("Failed to load products from API:", err));
   }, []);
@@ -46,14 +39,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4f5f7]">
+    <div className="min-h-screen flex flex-col bg-[#f1f2f4]">
       <Header />
+      <CategoryGrid />
 
-      <main className="max-w-7xl mx-auto w-full px-4 py-6 flex flex-col gap-8">
+      <main className="max-w-[1440px] mx-auto w-full px-2 sm:px-4 py-3 flex flex-col gap-4">
         <HeroBanner />
-        <PerksStrip />
-        <CategoryGrid />
-        <PromoBannerGrid />
 
         <DealsOfTheDay products={deals} onAddToCart={handleAddToCart} onWishlist={handleWishlist} />
 
@@ -75,6 +66,8 @@ export default function Home() {
           onWishlist={handleWishlist}
         />
 
+        <PerksStrip />
+        <PromoBannerGrid />
         <AppDownloadBanner />
       </main>
 

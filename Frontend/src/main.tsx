@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { AddressProvider } from "./context/AddressContext";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -14,7 +15,9 @@ createRoot(rootElement).render(
   <StrictMode>
     <AuthProvider>
       <CartProvider>
-        <App />
+        <AddressProvider>
+          <App />
+        </AddressProvider>
       </CartProvider>
     </AuthProvider>
   </StrictMode>,

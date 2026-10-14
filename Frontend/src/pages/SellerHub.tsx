@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
@@ -7,14 +7,14 @@ import Button from "../components/common/Button";
 import { ShieldCheck, TrendingUp, Users, CheckCircle } from "lucide-react";
 
 export default function SellerHub() {
-  const { user, openLoginModal, becomeSeller } = useAuth();
+  const { user, becomeSeller } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleStartSelling = async () => {
     if (!user) {
-      openLoginModal("login");
+      navigate("/login");
       return;
     }
 
@@ -34,7 +34,7 @@ export default function SellerHub() {
     {
       id: 1,
       title: "Register/Login your Account",
-      desc: "Sign up on ShipZone with your email address and mobile number.",
+      desc: "Sign up on ShopZone with your email address and mobile number.",
     },
     {
       id: 2,
@@ -61,7 +61,7 @@ export default function SellerHub() {
                 Seller Hub
               </span>
               <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
-                Sell online to crores of customers on ShipZone
+                Sell online to crores of customers on ShopZone
               </h1>
               <p className="text-gray-300 text-base md:text-lg">
                 Become a seller or administrator today and manage products, track real-time orders, and oversee user roles.
@@ -106,9 +106,11 @@ export default function SellerHub() {
                   <p className="text-sm text-gray-600">
                     You need to log in or create a customer account before promoting yourself to a seller.
                   </p>
-                  <Button onClick={() => openLoginModal("login")} className="w-full py-3">
-                    Login / Sign Up
-                  </Button>
+                  <Link to="/login" className="w-full">
+                    <Button className="w-full py-3">
+                      Login / Sign Up
+                    </Button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -118,7 +120,7 @@ export default function SellerHub() {
         {/* Benefits Section */}
         <div className="max-w-5xl mx-auto py-16 px-4 flex flex-col gap-12">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900">
-            Why Sell on ShipZone?
+            Why Sell on ShopZone?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-sm shadow-xs border border-gray-100 flex flex-col items-center text-center gap-3">

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/validation.test.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init"
   },
@@ -13,7 +14,12 @@
     "cors": "^2.8.0",
     "dotenv": "^16.4.1",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.7.0",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.1",
+    "libphonenumber-js": "^1.13.12",
+    "nodemailer": "^10.0.1",
     "pg": "^8.5.0",
     "prisma": "^5.22.0"
   }
